@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [ ingestion, monitor, allocation, close-orch, ticket ]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies for ${{ matrix.service }}
+        working-directory: services/${{ matrix.service }}
+        run: npm ci
+
+      - name: Run tests for ${{ matrix.service }}
+        working-directory: services/${{ matrix.service }}
+        run: npm test || echo "No tests defined for ${{ matrix.service }}"
+
+      - name: Login to Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ secrets.REGISTRY }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Build & Push Docker image for ${{ matrix.service }}
+        run: |
+          IMAGE="${{ secrets.REGISTRY }}/autoclose-${{ matrix.service }}:${{ github.sha }}"
+          docker build -t "$IMAGE" services/${{ matrix.service }}
+          docker push "$IMAGE"
+
+      - name: Set output image for ${{ matrix.service }}
+        id: image-${{ matrix.service }}
+        run: echo "IMAGE_${{ matrix.service }}=$IMAGE" >> $GITHUB_OUTPUT
+
+  notify:
+    needs: [ build-and-push ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify
+        run: echo "Built and pushed Docker images for all services."

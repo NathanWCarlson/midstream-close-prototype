@@ -1,0 +1,13 @@
+{
+  "name": "ingestion",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "kafka-node": "^5.0.0",
+    "axios": "^1.3.5"
+  }
+}

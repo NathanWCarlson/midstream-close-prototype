@@ -1,0 +1,40 @@
+{{- range .Values.services }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}
+  labels:
+    app: autoclose-
+    service: {{ .name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: autoclose-
+      service: {{ .name }}
+  template:
+    metadata:
+      labels:
+        app: autoclose-
+        service: {{ .name }}
+    spec:
+      containers:
+        - name: {{ .name }}
+          image: "autoclose-{{ .name }}:{{ $.Values.tag }}"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: {{ .port }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .port }}
+            initialDelaySeconds: 15
+            periodSeconds: 20
+---
+{{- end }}

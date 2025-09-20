@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: autoclose-prototype
+  namespace: argocd   # Argo CD installed namespace
+spec:
+  project: default
+
+  source:
+    repoURL: "https://github.com/NathanWCarlson/OG-AI-Agent.git"
+    targetRevision: main
+    path: midstream-close-prototype/helm/autoclose
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: autoclose
+
+  syncPolicy:
+    automated:
+      prune: true        # Remove resources no longer defined in Git
+      selfHeal: true     # Automatically sync out-of-sync resources
+    syncOptions:
+      - CreateNamespace=true  # Create target namespace if missing

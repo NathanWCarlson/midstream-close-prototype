@@ -1,0 +1,16 @@
+# Default values for AutoClose prototype
+
+registry: ""
+tag: "latest"
+
+services:
+  - name: ingestion
+    port: 3000
+  - name: monitor
+    port: 3001
+  - name: allocation
+    port: 3002
+  - name: close-orch
+    port: 3003
+  - name: ticket
+    port: 3004
