@@ -4,18 +4,18 @@ kind: Deployment
 metadata:
   name: {{ .name }}
   labels:
-    app: autoclose-
+    app: autoclose
     service: {{ .name }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: autoclose-
+      app: autoclose
       service: {{ .name }}
   template:
     metadata:
       labels:
-        app: autoclose-
+        app: autoclose
         service: {{ .name }}
     spec:
       containers:
