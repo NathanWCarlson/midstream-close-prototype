@@ -4,12 +4,12 @@ kind: Service
 metadata:
   name: {{ .name }}
   labels:
-    app: autoclose-
+    app: autoclose
     service: {{ .name }}
 spec:
   type: ClusterIP
   selector:
-    app: autoclose-
+    app: autoclose
     service: {{ .name }}
   ports:
     - port: {{ .port }}

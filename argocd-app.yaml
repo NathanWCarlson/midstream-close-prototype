@@ -7,9 +7,9 @@ spec:
   project: default
 
   source:
-    repoURL: "https://github.com/NathanWCarlson/OG-AI-Agent.git"
-    targetRevision: main
-    path: midstream-close-prototype/helm/autoclose
+    repoURL: "https://github.com/NathanWCarlson/midstream-close-prototype.git"
+    targetRevision: develop
+    path: helm/autoclose
 
   destination:
     server: https://kubernetes.default.svc
